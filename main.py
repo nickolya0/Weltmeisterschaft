@@ -18,6 +18,7 @@ tabs_List = []
 serialize_list = []  
 list_obj = []
 
+
 class Window:
     def __init__(self, root, width, height, title="MyWindow", resizable=(False,False), icon=None) -> None:
         self.root = root
@@ -25,6 +26,7 @@ class Window:
         self.root.geometry(f"{width}x{height}+200+200")
         self.root.resizable(resizable[0], resizable[1])
         self.i = 4
+        self.field_index = 2
 
         self.manschaftList = manschaftList
         # self.manschaftList_Sort = manschaftList_Sort
@@ -37,6 +39,8 @@ class Window:
         self.tabs_control = Notebook(self.root)
         self.message_entry = Entry(self.root)
         self.list_obj = list_obj
+
+        self.tab_nummer = 1
 
         # self.obj_tab = tab_class.Tab_creator(self, root)
 
@@ -65,7 +69,7 @@ class Window:
         self.load_manschaften()
         # self.tab_creat()
         Button(self.root, width=6, text="+ TAG", command=self.tab_obj_creator).pack()
-        Button(self.root, width=6, text="+", command=self.add_f).pack()
+        Button(self.root, width=6, text="+", command=self.field_obj_creator).pack()
 #======================
 
         # print('von List Obj - ', self.list_obj[0].tab_erstellen())
@@ -77,9 +81,50 @@ class Window:
     def tab_obj_creator(self):
 
         obj_tab = tab_class.Tab_creator(root, window.manschaftList_Sort, self.tabs_control)
+        self.tabs_control.select(obj_tab.tab)       #   SELECT aktualisiert Tab
+        # obj_tab.tab(0)['fdgdf']
         self.list_obj.append(obj_tab)
+        print(self.tabs_control.index(END))
 
 
+        self.tab_nummer += 1
+
+    def field_obj_creator(self):
+
+        tab = self.list_obj[self.tabs_control.index(CURRENT)].tab
+        x = Combobox(tab, values=[str(i) for i in self.manschaftList_Sort], state="readonly")
+        x.current(0)
+        x.grid(row=self.field_index+1, column=0, padx=20, pady=5)
+        Spinbox(tab, values=([i for i in range(100)]), width=4, wrap=True).grid(row=self.field_index+1, column=1)
+        Spinbox(tab, values=([i for i in range(100)]), width=4, wrap=True).grid(row=self.field_index+1, column=2)
+        y = Combobox(tab, value=[str(i) for i in self.manschaftList_Sort], state="readonly")
+        y.current(1)
+        y.grid(row=self.field_index+1, column=3, padx=20)
+        self.field_index += 2
+
+    # def field_obj_creator2(self):
+    #     # print(self.list_obj[0].tab)
+    #     self.tab = self.list_obj[0].tab
+    #     a = self.tab = Frame(self.tabs_control)
+    #     b = self.tabs_control.add(self.tab, text="Tab")
+    #     c = self.tabs_control.pack(fill=BOTH, expand=1)
+    #     Label(self.tab, text="Manschaft").grid(row=0, column=0, padx=20)
+    #     Label(self.tab, text="Tore").grid(row=0, column=1)
+    #     Label(self.tab, text="Tore").grid(row=0, column=2)
+    #     Label(self.tab, text="Manschaft").grid(row=0, column=3)
+
+
+    #     x = Combobox(self.tab, values=[str(i) for i in self.manschaftList_Sort], state="readonly")
+    #     x.current(0)
+    #     x.grid(row=1, column=0, padx=20, pady=5)
+    #     Spinbox(self.tab, values=([i for i in range(100)]), width=4, wrap=True).grid(row=1, column=1)
+    #     Spinbox(self.tab, values=([i for i in range(100)]), width=4, wrap=True).grid(row=1, column=2)
+    #     y = Combobox(self.tab, value=[str(i) for i in self.manschaftList_Sort], state="readonly")
+    #     y.current(1)
+    #     y.grid(row=1, column=3, padx=20)
+
+    #     # Button(self.tab, width=6, text="+ TAG", command=self.tab_creat).grid(row=0, column=4)
+    #     # Button(self.tab, width=6, text="+", command=self.add_f).grid(row=1, column=4)
 
     def load_manschaften(self):
         if os.path.isfile('manschaften.txt') is True:
@@ -91,27 +136,7 @@ class Window:
 
         file.close
 
-    def tab_creat(self):
-        a = self.tab = Frame(self.tabs_control)
-        b = self.tabs_control.add(self.tab, text="Tab")
-        c = self.tabs_control.pack(fill=BOTH, expand=1)
-        Label(self.tab, text="Manschaft").grid(row=0, column=0, padx=20)
-        Label(self.tab, text="Tore").grid(row=0, column=1)
-        Label(self.tab, text="Tore").grid(row=0, column=2)
-        Label(self.tab, text="Manschaft").grid(row=0, column=3)
-
-
-        x = Combobox(self.tab, values=[str(i) for i in self.manschaftList_Sort], state="readonly")
-        x.current(0)
-        x.grid(row=1, column=0, padx=20, pady=5)
-        Spinbox(self.tab, values=([i for i in range(100)]), width=4, wrap=True).grid(row=1, column=1)
-        Spinbox(self.tab, values=([i for i in range(100)]), width=4, wrap=True).grid(row=1, column=2)
-        y = Combobox(self.tab, value=[str(i) for i in self.manschaftList_Sort], state="readonly")
-        y.current(1)
-        y.grid(row=1, column=3, padx=20)
-
-        Button(self.tab, width=6, text="+ TAG", command=self.tab_creat).grid(row=0, column=4)
-        Button(self.tab, width=6, text="+", command=self.add_f).grid(row=1, column=4)
+    
 
     def add_f(self):
         q = Combobox(self.tab, value=[str(i) for i in self.manschaftList_Sort], state="readonly")
@@ -128,7 +153,7 @@ class Window:
     def create_cup(self):
         self.save_manschaften()
         self.restart()
-        self.tab_creat()
+        # self.tab_creat()
 
     def restart(self):
         self.root.destroy()

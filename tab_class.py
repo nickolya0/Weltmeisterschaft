@@ -9,13 +9,17 @@ class Tab_creator:
         self.root = root
         self.manschaftList_Sort = list
         self.tabs_control = tabs_control
+        self.tab = Frame(self.tabs_control)
+        self.tab_nummer = 1
+
         self.tab_erstellen()
         
     def tab_erstellen(self):
         print('tab_erstellen')
-        a = self.tab = Frame(self.tabs_control)
-        b = self.tabs_control.add(self.tab, text="Tab")
-        c = self.tabs_control.pack(fill=BOTH, expand=1)
+        self.tab = Frame(self.tabs_control)
+        # self.tabs_control.select(self.tab)
+        self.tabs_control.add(self.tab, text="Tab")
+        self.tabs_control.pack(fill=BOTH, expand=1)
         Label(self.tab, text="Manschaft").grid(row=0, column=0, padx=20)
         Label(self.tab, text="Tore").grid(row=0, column=1)
         Label(self.tab, text="Tore").grid(row=0, column=2)
