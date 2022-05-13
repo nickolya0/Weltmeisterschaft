@@ -27,6 +27,7 @@ class Window:
         self.root.resizable(resizable[0], resizable[1])
         self.i = 4
         self.field_index = 2
+        self.tab_index = 1
 
         self.manschaftList = manschaftList
         # self.manschaftList_Sort = manschaftList_Sort
@@ -39,8 +40,6 @@ class Window:
         self.tabs_control = Notebook(self.root)
         self.message_entry = Entry(self.root)
         self.list_obj = list_obj
-
-        self.tab_nummer = 1
 
         # self.obj_tab = tab_class.Tab_creator(self, root)
 
@@ -80,14 +79,14 @@ class Window:
     
     def tab_obj_creator(self):
 
-        obj_tab = tab_class.Tab_creator(root, window.manschaftList_Sort, self.tabs_control)
+        obj_tab = tab_class.Tab_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index)
         self.tabs_control.select(obj_tab.tab)       #   SELECT aktualisiert Tab
         # obj_tab.tab(0)['fdgdf']
         self.list_obj.append(obj_tab)
         print(self.tabs_control.index(END))
 
 
-        self.tab_nummer += 1
+        self.tab_index += 1
 
     def field_obj_creator(self):
 
