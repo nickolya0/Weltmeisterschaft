@@ -18,7 +18,7 @@ class Tab_creator:
         print('tab_erstellen')
         self.tab = Frame(self.tabs_control)
         # self.tabs_control.select(self.tab)
-        self.tabs_control.add(self.tab, text="Spl.{0}".format(self.tab_index))
+        self.tabs_control.add(self.tab, text="Tag {0}".format(self.tab_index))
         # self.tabs_control.add(self.tab, text="Spl")
         self.tabs_control.pack(fill=BOTH, expand=1)
         Label(self.tab, text="Manschaft").grid(row=0, column=0, padx=20)
