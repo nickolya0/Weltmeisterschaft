@@ -9,6 +9,7 @@ import dill
 import os.path
 import IntroWindow
 import tab_class
+import field_class
 
 from pandas import value_counts
 
@@ -62,31 +63,36 @@ class Window:
     
     def draw_widgets(self):
         self.draw_menu()
-        self.load_manschaften()
+        # self.load_manschaften()
         # self.tab_creat()
         Button(self.root, width=6, text="+ TAG", command=self.tab_obj_creator).pack()
         Button(self.root, width=6, text="+", command=self.field_obj_creator).pack()
+        Button(self.root, width=6, text="Rechnen", command=self.tab_data_berechnen).pack()
+        
     
     def tab_obj_creator(self):
 
-        obj_tab = tab_class.Tab_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index)
+        obj_tab = tab_class.Tab_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, self.field_index)
         self.tabs_control.select(obj_tab.tab)       #   SELECT aktualisiert Tab
         self.list_obj.append(obj_tab)
-        print(self.tabs_control.index(END))
+        # print(self.tabs_control.index(END))
+        # print(self.tabs_control.index(CURRENT))
         self.tab_index += 1
+        self.field_index +=2
+
 
     def field_obj_creator(self):
 
         tab = self.list_obj[self.tabs_control.index(CURRENT)].tab
-        x = Combobox(tab, values=[str(i) for i in self.manschaftList_Sort], state="readonly")
-        x.current(0)
-        x.grid(row=self.field_index+1, column=0, padx=20, pady=5)
-        Spinbox(tab, values=([i for i in range(100)]), width=4, wrap=True).grid(row=self.field_index+1, column=1)
-        Spinbox(tab, values=([i for i in range(100)]), width=4, wrap=True).grid(row=self.field_index+1, column=2)
-        y = Combobox(tab, value=[str(i) for i in self.manschaftList_Sort], state="readonly")
-        y.current(1)
-        y.grid(row=self.field_index+1, column=3, padx=20)
-        self.field_index += 2
+        self.field_obj = field_class.Field_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, tab, self.field_index)
+        self.field_index +=2
+
+    def tab_data_berechnen(self):
+        for i in self.list_obj:
+            print(self.field_obj.x.get())
+            print(self.field_obj.spin_l.get())
+            print(self.field_obj.spin_r.get())
+            print(self.field_obj.y.get())        
 
     def load_manschaften(self):
         if os.path.isfile('manschaften.txt') is True:
@@ -95,18 +101,7 @@ class Window:
                     print(line.strip())
                     self.manschaftList_Sort.append(line.strip())
 
-        file.close    
-
-    def add_f(self):
-        q = Combobox(self.tab, value=[str(i) for i in self.manschaftList_Sort], state="readonly")
-        q.current(0)
-        q.grid(row=self.i+1, column=0, padx=20, pady=5)
-        Spinbox(self.tab, values=([i for i in range(100)]), width=4, wrap=True).grid(row=self.i+1, column=1)
-        Spinbox(self.tab, values=([i for i in range(100)]), width=4, wrap=True).grid(row=self.i+1, column=2)
-        w = Combobox(self.tab, value=[str(i) for i in self.manschaftList_Sort], state="readonly")
-        w.current(1)
-        w.grid(row=self.i+1, column=3, padx=20)
-        self.i += 1
+        file.close  
 
     def create_cup(self):                   # ???????????????????????????
         self.save_manschaften()
@@ -158,16 +153,6 @@ if __name__ == "__main__":
 
         root = tkinter.Tk()
         window = Window(root, 500, 500, "App")
-        
-        
-#=============================
-        # print(obj_tab, end="\n========\n")  # Выведет информацию о классе
-        # serialized = pickle.dumps(obj_tab)  # Сериализуем 
-        # print(serialized, end="\n========\n")  # Выведет какие-то байты
-        # b = pickle.loads(serialized)  # Восстанавливаем экземпляр класса из байтов
-        # print(b)  # Смотрим, что восстановилось
-#=============================
-
         window.run()
         root.mainloop()
 
