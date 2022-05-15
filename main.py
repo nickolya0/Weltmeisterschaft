@@ -75,7 +75,7 @@ class Window:
         
     
     def tab_obj_creator(self):
-
+        self.list_field_to_dict = []
         obj_tab = tab_class.Tab_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, self.field_index)
         self.tabs_control.select(obj_tab.tab)       #   SELECT aktualisiert Tab
         self.list_obj.append(obj_tab)
@@ -89,7 +89,8 @@ class Window:
         self.field_index +=2
 
     def field_obj_creator(self):
-
+        print('!!!!!!!!!!!!!!!!!!!!!!!! CURRENT', self.tabs_control.index(CURRENT))
+        
         tab = self.list_obj[self.tabs_control.index(CURRENT)].tab
         field_obj = field_class.Field_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, tab, self.field_index)
         self.field_index +=2
@@ -101,18 +102,16 @@ class Window:
 
 
     def tab_data_berechnen(self):
-        print('len.obj', len(self.obj_tab_dict))
-        print('len.field', len(self.obj_field_dict))
-        for key in self.obj_tab_dict:
-            print('Tab-key', key)
+        # print('len.obj', len(self.obj_tab_dict))
+        # print('len.field', len(self.obj_field_dict))
+        # for key in self.obj_tab_dict:
+        #     print('Tab-key', key)
 
         for key_i in self.obj_field_dict:
+            print('field-key', key_i ) # list Obj_Fields
             print('field-key', self.obj_field_dict[key_i]) # list Obj_Fields
             for i in self.obj_field_dict[key_i]:
-                print(i.x.get())
-                print(i.spin_l.get())
-                print(i.spin_r.get())
-                print(i.y.get())
+                print(i.x.get(), i.spin_l.get(), i.spin_r.get(), i.y.get())
 
     def load_manschaften(self):
         if os.path.isfile('manschaften.txt') is True:
