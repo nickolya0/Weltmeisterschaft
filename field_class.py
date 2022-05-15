@@ -28,7 +28,6 @@ class Field_creator:
         self.field_bauen()
 
     def field_bauen(self):
-        print('test', self.field_index)
         self.x = Combobox(self.tab, values=[str(i) for i in self.manschaftList_Sort], state="readonly")
         self.x.current(0)
         self.x.grid(row=self.field_index+1, column=0, padx=20, pady=5)

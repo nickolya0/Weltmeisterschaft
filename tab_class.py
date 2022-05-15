@@ -24,6 +24,6 @@ class Tab_creator:
         self.x = ''
         self.y = ''
 
-        self.field_obj = field_class.Field_creator(root, self.manschaftList_Sort, self.tabs_control, self.tab_index, self.tab, self.index)
+        # self.field_obj = field_class.Field_creator(root, self.manschaftList_Sort, self.tabs_control, self.tab_index, self.tab, self.index)
 
 

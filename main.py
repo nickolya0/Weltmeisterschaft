@@ -18,6 +18,9 @@ manschaftList_Sort = []
 tabs_List = []
 serialize_list = []  
 list_obj = []
+obj_tab_dict = {}
+obj_field_dict = {}
+list_field_to_dict = []
 
 
 class Window:
@@ -40,6 +43,9 @@ class Window:
         self.tabs_control = Notebook(self.root)
         self.message_entry = Entry(self.root)
         self.list_obj = list_obj
+        self.obj_tab_dict = obj_tab_dict
+        self.obj_field_dict = obj_field_dict
+        self.list_field_to_dict = list_field_to_dict
 
         if icon:
             self.root.iconbitmap(icon)
@@ -63,8 +69,6 @@ class Window:
     
     def draw_widgets(self):
         self.draw_menu()
-        # self.load_manschaften()
-        # self.tab_creat()
         Button(self.root, width=6, text="+ TAG", command=self.tab_obj_creator).pack()
         Button(self.root, width=6, text="+", command=self.field_obj_creator).pack()
         Button(self.root, width=6, text="Rechnen", command=self.tab_data_berechnen).pack()
@@ -75,24 +79,40 @@ class Window:
         obj_tab = tab_class.Tab_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, self.field_index)
         self.tabs_control.select(obj_tab.tab)       #   SELECT aktualisiert Tab
         self.list_obj.append(obj_tab)
-        # print(self.tabs_control.index(END))
-        # print(self.tabs_control.index(CURRENT))
+        
+        self.field_obj_creator()
+
+        self.obj_tab_dict[self.tab_index] = obj_tab     # versuchen Obj Tab in Dict schpeichern
+        print('len.Obj', len(self.obj_tab_dict))
+        print('len.Obj', self.obj_tab_dict)
         self.tab_index += 1
         self.field_index +=2
-
 
     def field_obj_creator(self):
 
         tab = self.list_obj[self.tabs_control.index(CURRENT)].tab
-        self.field_obj = field_class.Field_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, tab, self.field_index)
+        field_obj = field_class.Field_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, tab, self.field_index)
         self.field_index +=2
+        self.list_field_to_dict.append(field_obj)
+        self.obj_field_dict[self.tabs_control.index(CURRENT)] = self.list_field_to_dict        # versuchen Obj Field in Dict schpeichern
+
+        print('len.Field', len(self.obj_field_dict[self.tabs_control.index(CURRENT)]))
+        print('len.Field', self.obj_field_dict)
+
 
     def tab_data_berechnen(self):
-        for i in self.list_obj:
-            print(self.field_obj.x.get())
-            print(self.field_obj.spin_l.get())
-            print(self.field_obj.spin_r.get())
-            print(self.field_obj.y.get())        
+        print('len.obj', len(self.obj_tab_dict))
+        print('len.field', len(self.obj_field_dict))
+        for key in self.obj_tab_dict:
+            print('Tab-key', key)
+
+        for key_i in self.obj_field_dict:
+            print('field-key', self.obj_field_dict[key_i]) # list Obj_Fields
+            for i in self.obj_field_dict[key_i]:
+                print(i.x.get())
+                print(i.spin_l.get())
+                print(i.spin_r.get())
+                print(i.y.get())
 
     def load_manschaften(self):
         if os.path.isfile('manschaften.txt') is True:
