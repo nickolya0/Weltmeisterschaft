@@ -1,9 +1,9 @@
-FC Bayern München
-Borussia Dortmund
-Bayer 04 Leverkusen
-RB Leipzig
-SC Freiburg
-FC Union Berlin
-TSG Hoffenheim
-Eintracht Frankfurt
-FSV Mainz 05
+FC_Bayern_München
+Borussia_Dortmund
+Bayer_04_Leverkusen
+RB_Leipzig
+SC_Freiburg
+FC_Union_Berlin
+TSG_Hoffenheim
+Eintracht_Frankfurt
+FSV_Mainz_05

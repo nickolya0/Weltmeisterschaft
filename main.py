@@ -77,9 +77,10 @@ class Window:
     def tab_obj_creator(self):
         self.list_field_to_dict = []
         obj_tab = tab_class.Tab_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, self.field_index)
+        
         self.tabs_control.select(obj_tab.tab)       #   SELECT aktualisiert Tab
         self.list_obj.append(obj_tab)
-        
+
         self.field_obj_creator()
 
         self.obj_tab_dict[self.tab_index] = obj_tab     # versuchen Obj Tab in Dict schpeichern
@@ -90,7 +91,7 @@ class Window:
 
     def field_obj_creator(self):
         print('!!!!!!!!!!!!!!!!!!!!!!!! CURRENT', self.tabs_control.index(CURRENT))
-        
+
         tab = self.list_obj[self.tabs_control.index(CURRENT)].tab
         field_obj = field_class.Field_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, tab, self.field_index)
         self.field_index +=2
@@ -113,6 +114,36 @@ class Window:
             for i in self.obj_field_dict[key_i]:
                 print(i.x.get(), i.spin_l.get(), i.spin_r.get(), i.y.get())
 
+    def save_manschaften(self):
+        with open('manschaften.txt', 'w', encoding="utf-8") as file:            
+            for i in self.manschaftList_Sort:
+                file.write(str(i))
+                file.write('\n')
+        file.close
+
+    def save_app(self):
+        self.save_tabs()
+        self.save_fields()
+
+    def save_tabs(self):
+        with open('x_tabs.txt', 'w', encoding="utf-8") as file:     
+            file.write(str(len(self.obj_tab_dict)))
+        file.close
+
+    def save_fields(self):
+        with open('x_fields.txt', 'w', encoding="utf-8") as file:            
+            for key_i in self.obj_field_dict:
+                for i in self.obj_field_dict[key_i]:
+                    str1 = str(i.x.get()) + ' ' + str(i.spin_l.get()) + ' ' + str(i.spin_r.get()) + ' ' + str(i.y.get())
+                    file.write(str1)
+                    file.write('\n')
+        file.close
+
+        
+
+    def load_obj(self):
+        pass
+
     def load_manschaften(self):
         if os.path.isfile('manschaften.txt') is True:
             with open('manschaften.txt', 'r', encoding="utf-8") as file:
@@ -132,13 +163,6 @@ class Window:
         window.x = False        
         window.run()
 
-    def save_manschaften(self):
-        with open('manschaften.txt', 'w', encoding="utf-8") as file:            
-            for i in self.manschaftList_Sort:
-                file.write(str(i))
-                file.write('\n')
-        file.close
-
     def delete(self):
         self.manschaftList.delete(ANCHOR)
 
@@ -153,7 +177,8 @@ class Window:
 
         # menu_bar.add_command(label="File")
         file_menu = Menu(menu_bar, tearoff=0)
-        # file_menu.add_command(label="Speichern", command=self.serialize_test)
+        file_menu.add_command(label="Öffnen", command=self.load_obj)
+        file_menu.add_command(label="Speichern", command=self.save_app)
         file_menu.add_command(label="Speichern as..")
         file_menu.add_separator() 
         file_menu.add_command(label="Exit", command=self.root.destroy) 
