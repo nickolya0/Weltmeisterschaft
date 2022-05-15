@@ -32,18 +32,20 @@ class Window:
         self.i = 4
         self.field_index = 2
         self.tab_index = 1
+        self.y_index = 1
 
         self.manschaftList = manschaftList
         self.manschaftList_Sort = manschaftList_Sort
         self.load_manschaften()
         self.tabs_List = tabs_List
         self.serialize_list = serialize_list 
+        self.load_fields_list = []
 
         self.manschaftList = Listbox(self.root)
         self.tabs_control = Notebook(self.root)
         self.message_entry = Entry(self.root)
         self.list_obj = list_obj
-        self.obj_tab_dict = obj_tab_dict
+        # self.obj_tab_dict = obj_tab_dict
         self.obj_field_dict = obj_field_dict
         self.list_field_to_dict = list_field_to_dict
 
@@ -83,36 +85,62 @@ class Window:
 
         self.field_obj_creator()
 
-        self.obj_tab_dict[self.tab_index] = obj_tab     # versuchen Obj Tab in Dict schpeichern
-        print('len.Obj', len(self.obj_tab_dict))
-        print('len.Obj', self.obj_tab_dict)
+        # self.obj_tab_dict[self.tab_index] = obj_tab     # versuchen Obj Tab in Dict schpeichern
+        # print('len.Obj', len(self.obj_tab_dict))
+        # print('len.Obj', self.obj_tab_dict)
         self.tab_index += 1
-        self.field_index +=2
+        # self.field_index +=2
 
     def field_obj_creator(self):
-        print('!!!!!!!!!!!!!!!!!!!!!!!! CURRENT', self.tabs_control.index(CURRENT))
-
         tab = self.list_obj[self.tabs_control.index(CURRENT)].tab
         field_obj = field_class.Field_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, tab, self.field_index)
         self.field_index +=2
         self.list_field_to_dict.append(field_obj)
         self.obj_field_dict[self.tabs_control.index(CURRENT)] = self.list_field_to_dict        # versuchen Obj Field in Dict schpeichern
 
-        print('len.Field', len(self.obj_field_dict[self.tabs_control.index(CURRENT)]))
-        print('len.Field', self.obj_field_dict)
-
 
     def tab_data_berechnen(self):
-        # print('len.obj', len(self.obj_tab_dict))
-        # print('len.field', len(self.obj_field_dict))
-        # for key in self.obj_tab_dict:
-        #     print('Tab-key', key)
-
         for key_i in self.obj_field_dict:
             print('field-key', key_i ) # list Obj_Fields
             print('field-key', self.obj_field_dict[key_i]) # list Obj_Fields
             for i in self.obj_field_dict[key_i]:
                 print(i.x.get(), i.spin_l.get(), i.spin_r.get(), i.y.get())
+
+    def load_listen(self):
+        
+        self.load_fields()
+        self.load_aktualisirung(self.load_tabs())
+
+    def load_tabs(self):
+        x = 0
+        if os.path.isfile('x_tabs.txt') is True:
+            with open('x_tabs.txt', 'r', encoding="utf-8") as file:
+                for line in file:
+                    x = int(line.strip())            
+        file.close 
+        return x
+
+    def load_fields(self):
+        if os.path.isfile('x_fields.txt') is True:
+            with open('x_fields.txt', 'r', encoding="utf-8") as file:
+                for line in file:
+                    print(line.strip())
+                    self.load_fields_list.append(line.strip())
+        file.close 
+
+    def load_aktualisirung(self, x):
+        i = 0
+        while i < x:
+            self.list_obj.append(tab_class.Tab_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, self.field_index))
+            self.tab_index += 1 
+            i += 1 
+
+            tab = self.list_obj[self.tabs_control.index(CURRENT)].tab
+            field_obj = field_class.Field_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, tab, self.field_index)
+            self.field_index +=2
+            self.list_field_to_dict.append(field_obj)
+            self.obj_field_dict[self.tabs_control.index(CURRENT)] = self.list_field_to_dict
+
 
     def save_manschaften(self):
         with open('manschaften.txt', 'w', encoding="utf-8") as file:            
@@ -127,22 +155,18 @@ class Window:
 
     def save_tabs(self):
         with open('x_tabs.txt', 'w', encoding="utf-8") as file:     
-            file.write(str(len(self.obj_tab_dict)))
+            file.write(str(len(self.list_obj)))
         file.close
 
     def save_fields(self):
         with open('x_fields.txt', 'w', encoding="utf-8") as file:            
             for key_i in self.obj_field_dict:
                 for i in self.obj_field_dict[key_i]:
-                    str1 = str(i.x.get()) + ' ' + str(i.spin_l.get()) + ' ' + str(i.spin_r.get()) + ' ' + str(i.y.get())
+                    str1 = str(self.y_index) + '_' + str(i.x.get()) + ' ' + str(i.spin_l.get()) + ' ' + str(i.spin_r.get()) + ' ' + str(i.y.get())
                     file.write(str1)
                     file.write('\n')
-        file.close
-
-        
-
-    def load_obj(self):
-        pass
+                self.y_index += 1
+        file.close        
 
     def load_manschaften(self):
         if os.path.isfile('manschaften.txt') is True:
@@ -152,10 +176,6 @@ class Window:
                     self.manschaftList_Sort.append(line.strip())
 
         file.close  
-
-    def create_cup(self):                   # ???????????????????????????
-        self.save_manschaften()
-        self.restart()
 
     def restart(self):                      # ???????????????????????????
         self.root.destroy()
@@ -177,7 +197,7 @@ class Window:
 
         # menu_bar.add_command(label="File")
         file_menu = Menu(menu_bar, tearoff=0)
-        file_menu.add_command(label="Öffnen", command=self.load_obj)
+        file_menu.add_command(label="Öffnen", command=self.load_listen)
         file_menu.add_command(label="Speichern", command=self.save_app)
         file_menu.add_command(label="Speichern as..")
         file_menu.add_separator() 
