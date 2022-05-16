@@ -1,4 +1,5 @@
 from copyreg import pickle
+from posixpath import split
 from textwrap import fill
 from tkinter import *
 import tkinter
@@ -7,6 +8,8 @@ import os
 import pickle
 import dill
 import os.path
+
+import numpy as np
 import IntroWindow
 import tab_class
 import field_class
@@ -39,7 +42,7 @@ class Window:
         self.load_manschaften()
         self.tabs_List = tabs_List
         self.serialize_list = serialize_list 
-        self.load_fields_list = []
+        self.load_fields_index = []
 
         self.manschaftList = Listbox(self.root)
         self.tabs_control = Notebook(self.root)
@@ -48,6 +51,7 @@ class Window:
         # self.obj_tab_dict = obj_tab_dict
         self.obj_field_dict = obj_field_dict
         self.list_field_to_dict = list_field_to_dict
+        self.index_combobox = []
 
         if icon:
             self.root.iconbitmap(icon)
@@ -97,6 +101,7 @@ class Window:
         self.field_index +=2
         self.list_field_to_dict.append(field_obj)
         self.obj_field_dict[self.tabs_control.index(CURRENT)] = self.list_field_to_dict        # versuchen Obj Field in Dict schpeichern
+        # self.index_combobox
 
 
     def tab_data_berechnen(self):
@@ -107,7 +112,6 @@ class Window:
                 print(i.x.get(), i.spin_l.get(), i.spin_r.get(), i.y.get())
 
     def load_listen(self):
-        
         self.load_fields()
         self.load_aktualisirung(self.load_tabs())
 
@@ -117,30 +121,54 @@ class Window:
             with open('x_tabs.txt', 'r', encoding="utf-8") as file:
                 for line in file:
                     x = int(line.strip())            
-        file.close 
+            file.close 
+        self.y_index = x + 1
         return x
 
     def load_fields(self):
-        if os.path.isfile('x_fields.txt') is True:
-            with open('x_fields.txt', 'r', encoding="utf-8") as file:
+        if os.path.isfile('x_fields.index') is True:
+            with open('x_fields.index', 'r') as file:
                 for line in file:
                     print(line.strip())
-                    self.load_fields_list.append(line.strip())
-        file.close 
+                    split_line = line.strip().split()
+                    self.index_combobox.append(split_line)
+                    self.load_fields_index.append(line.strip())
+            file.close 
+        # inx = self.load_fields_index[len(self.load_fields_index)-1].split(' ')
+        # self.y_index = inx[0]
 
-    def load_aktualisirung(self, x):
+    def load_aktualisirung(self, tab_count):
         i = 0
-        while i < x:
+        a = 0
+        while i < tab_count:
             self.list_obj.append(tab_class.Tab_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, self.field_index))
             self.tab_index += 1 
+            index = []
+            for zeile in self.load_fields_index:
+                index.append(zeile.split(' '))
+            arr = np.array(index)
+            print(arr)
+            print(a)
+            while a < len(arr):
+                tab = self.list_obj[self.tabs_control.index(i)].tab
+                field_obj = field_class.Field_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, tab, self.field_index)
+                self.field_index +=2
+                
+                field_obj.x.current(arr[a, 1])
+                print('TEAM_1', arr[a, 1])
+                field_obj.spin_l.set(arr[a, 2])
+                print('Tore_1', arr[a, 2])
+                print('Tore_2', arr[a, 3])
+                field_obj.spin_r.set(arr[a, 3])
+                field_obj.y.current(arr[a, 4])
+                print('TEAM_2', arr[a, 4])
+                if arr[a,0] != arr[a+1,0]:
+                    print(arr[a,0])
+                    print(arr[a+1,0])
+                    a += 1
+                    break
+                a += 1
             i += 1 
-
-            tab = self.list_obj[self.tabs_control.index(CURRENT)].tab
-            field_obj = field_class.Field_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, tab, self.field_index)
-            self.field_index +=2
-            self.list_field_to_dict.append(field_obj)
-            self.obj_field_dict[self.tabs_control.index(CURRENT)] = self.list_field_to_dict
-
 
     def save_manschaften(self):
         with open('manschaften.txt', 'w', encoding="utf-8") as file:            
@@ -159,14 +187,30 @@ class Window:
         file.close
 
     def save_fields(self):
-        with open('x_fields.txt', 'w', encoding="utf-8") as file:            
+        index1 = self.y_index
+        with open('x_fields.txt', 'a', encoding="utf-8") as file:            
             for key_i in self.obj_field_dict:
                 for i in self.obj_field_dict[key_i]:
-                    str1 = str(self.y_index) + '_' + str(i.x.get()) + ' ' + str(i.spin_l.get()) + ' ' + str(i.spin_r.get()) + ' ' + str(i.y.get())
+                    str1 = str(index1) + ' ' + str(i.x.get()) + ' ' + str(i.spin_l.get()) + ' ' + str(i.spin_r.get()) + ' ' + str(i.y.get())
                     file.write(str1)
                     file.write('\n')
-                self.y_index += 1
-        file.close        
+                # self.y_index += 1
+                index1 += 1
+        file.close   
+
+        # self.y_index = 1
+        index2 = self.y_index        
+        with open('x_fields.index', 'a', encoding="utf-8") as file:            
+            for key_i in self.obj_field_dict:
+                for i in self.obj_field_dict[key_i]:
+                    str1 = str(index2) + ' ' + str(i.x.current()) + ' ' + str(i.spin_l.get()) + ' ' + str(i.spin_r.get()) + ' ' + str(i.y.current())
+                    file.write(str1)
+                    file.write('\n')
+                index2 += 1
+                # self.y_index += 1
+        file.close 
+        # self.y_index = 1
+             
 
     def load_manschaften(self):
         if os.path.isfile('manschaften.txt') is True:
