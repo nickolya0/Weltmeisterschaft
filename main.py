@@ -1,20 +1,14 @@
-from copyreg import pickle
-from posixpath import split
-from textwrap import fill
 from tkinter import *
 import tkinter
 from tkinter.ttk import Combobox, Notebook
 import os
-import pickle
-import dill
 import os.path
 
 import numpy as np
 import IntroWindow
 import tab_class
 import field_class
-
-from pandas import value_counts
+import tabelle
 
 manschaftList = []
 manschaftList_Sort = []
@@ -78,7 +72,10 @@ class Window:
         Button(self.root, width=6, text="+ TAG", command=self.tab_obj_creator).pack()
         Button(self.root, width=6, text="+", command=self.field_obj_creator).pack()
         Button(self.root, width=6, text="Rechnen", command=self.tab_data_berechnen).pack()
+        Button(self.root, width=6, text="Tabelle", command=self.obj_tabelle).pack()
         
+    def obj_tabelle(self):        
+        obj_tabelle = tabelle.Tabelle(root, self.manschaftList_Sort, self.load_fields_index)
     
     def tab_obj_creator(self):
         self.list_field_to_dict = []
@@ -134,6 +131,7 @@ class Window:
                     self.index_combobox.append(split_line)
                     self.load_fields_index.append(line.strip())
             file.close 
+
         # inx = self.load_fields_index[len(self.load_fields_index)-1].split(' ')
         # self.y_index = inx[0]
 
@@ -148,25 +146,23 @@ class Window:
                 index.append(zeile.split(' '))
             arr = np.array(index)
             print(arr)
-            print(a)
             while a < len(arr):
                 tab = self.list_obj[self.tabs_control.index(i)].tab
                 field_obj = field_class.Field_creator(root, window.manschaftList_Sort, self.tabs_control, self.tab_index, tab, self.field_index)
                 self.field_index +=2
                 
                 field_obj.x.current(arr[a, 1])
-                print('TEAM_1', arr[a, 1])
+                field_obj.x['state'] = 'disable'    # disable
                 field_obj.spin_l.set(arr[a, 2])
-                print('Tore_1', arr[a, 2])
-                print('Tore_2', arr[a, 3])
                 field_obj.spin_r.set(arr[a, 3])
                 field_obj.y.current(arr[a, 4])
-                print('TEAM_2', arr[a, 4])
-                if arr[a,0] != arr[a+1,0]:
-                    print(arr[a,0])
-                    print(arr[a+1,0])
-                    a += 1
-                    break
+                field_obj.y['state'] = 'disable'    # disable
+                try:
+                    if arr[a,0] != arr[a+1,0]:
+                        a += 1
+                        break               
+                except:
+                    print("Index out")
                 a += 1
             i += 1 
 
