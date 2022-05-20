@@ -71,7 +71,7 @@ class Window:
         self.draw_menu()
         Button(self.root, width=6, text="+ TAG", command=self.tab_obj_creator).pack()
         Button(self.root, width=6, text="+", command=self.field_obj_creator).pack()
-        Button(self.root, width=6, text="Rechnen", command=self.tab_data_berechnen).pack()
+        # Button(self.root, width=6, text="Rechnen", command=self.tab_data_berechnen).pack()
         Button(self.root, width=6, text="Tabelle", command=self.obj_tabelle).pack()
         
     def obj_tabelle(self):        
