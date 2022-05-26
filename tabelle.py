@@ -55,7 +55,9 @@ class Tabelle:
         
 
         tv = ttk.Treeview(self.root)
+
         tv['columns']=('Manschaft', 'Score', 'Tore', 'Spiele')
+
         tv.column('#0', width=0, stretch=NO)
         tv.column('Manschaft', anchor=CENTER, width=80)
         tv.column('Score', anchor=CENTER, width=80)
@@ -74,11 +76,13 @@ class Tabelle:
 
         nummer = 0
         for i in self.scoreList:
+
             st = i.split(' ')[0]
             print()
             print('1111111111111111111111111111111111')
             print(self.manschaftList_Sort[int(i.split(' ')[0])])
             tv.insert(parent='', index=nummer, iid=nummer, text='', values=(self.manschaftList_Sort[int(i.split(' ')[0])], self.scoreList[nummer].split(' ')[1], self.toreZusamenVerbinden[nummer].split(' ')[1], self.spieleList[nummer].split(' ')[1]))
+
             nummer += 1
         tv.pack()
 
@@ -132,7 +136,7 @@ class Tabelle:
                     spiele += 1
                     tore +=  int(item[2])           
                     toreN += int(item[3])
-                               
+
             for item in self.arr:
                 if int(item[4]) == x:
                     if int(item[3])>int(item[2]):
@@ -149,6 +153,7 @@ class Tabelle:
                     print("tore2--", toreN)
                     tore += int(item[3])  
                     toreN += int(item[2])  
+
             if  spiele > 0:
                 str1 = str(x) + ' ' + str(score)
                 spl1 = str(x) + ' ' + str(spiele)
@@ -160,7 +165,7 @@ class Tabelle:
                 self.toreListNegativ.append(tore2)    # tore list
 
             x += 1
-                
+
         print('SCORE------', self.scoreList)
         print('SPIELE------', self.spieleList)
         print('TORE------', self.toreList)
