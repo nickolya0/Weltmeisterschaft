@@ -108,11 +108,12 @@ class Tabelle:
         rows, columns = self.arr.shape
         x = 0
         str1 = ''
-        prufList = []
+        # prufList = []
         print("rows _______________", rows)
+        print("len(self.manschaftList_Sort)-1: _______________", len(self.manschaftList_Sort)-1)
         # self.manschaftList_Sort
         # while x < rows:
-        while x < len(self.manschaftList_Sort)-1:
+        while x <= len(self.manschaftList_Sort)-1:
             score = 0
             spiele = 0
             tore = 0
@@ -128,7 +129,8 @@ class Tabelle:
                         score += 0  
                     spiele += 1
                     tore +=  int(item[2])           
-                    toreN += int(item[3])           
+                    toreN += int(item[3])
+                               
             for item in self.arr:
                 if int(item[4]) == x:
                     if int(item[3])>int(item[2]):
@@ -145,18 +147,18 @@ class Tabelle:
                     print("tore2--", toreN)
                     tore += int(item[3])  
                     toreN += int(item[2])  
+            if  spiele > 0:
+                str1 = str(x) + ' ' + str(score)
+                spl1 = str(x) + ' ' + str(spiele)
+                tore1 = str(x) + ' ' + str(tore)
+                tore2 = str(x) + ' ' + str(toreN)
+                self.scoreList.append(str1)     # score list
+                self.spieleList.append(spl1)    # spiele list
+                self.toreList.append(tore1)    # tore list
+                self.toreListNegativ.append(tore2)    # tore list
 
-            str1 = str(x) + ' ' + str(score)
-            spl1 = str(x) + ' ' + str(spiele)
-            tore1 = str(x) + ' ' + str(tore)
-            tore2 = str(x) + ' ' + str(toreN)
-            self.scoreList.append(str1)     # score list
-            self.spieleList.append(spl1)    # spiele list
-            self.toreList.append(tore1)    # tore list
-            self.toreListNegativ.append(tore2)    # tore list
-
-                
             x += 1
+                
         print('SCORE------', self.scoreList)
         print('SPIELE------', self.spieleList)
         print('TORE------', self.toreList)
