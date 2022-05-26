@@ -74,7 +74,8 @@ class Tabelle:
         for i in self.scoreList:
             st = i.split(' ')[0]
             print()
-            print()
+            print('1111111111111111111111111111111111')
+            print(self.manschaftList_Sort[int(i.split(' ')[0])])
             tv.insert(parent='', index=nummer, iid=nummer, text='', values=(self.manschaftList_Sort[int(i.split(' ')[0])], self.scoreList[nummer].split(' ')[1], self.toreZusamenVerbinden[nummer].split(' ')[1]))
             nummer += 1
         tv.pack()
@@ -107,12 +108,17 @@ class Tabelle:
         rows, columns = self.arr.shape
         x = 0
         str1 = ''
-        while x < rows:
+        prufList = []
+        print("rows _______________", rows)
+        # self.manschaftList_Sort
+        # while x < rows:
+        while x < len(self.manschaftList_Sort)-1:
             score = 0
             spiele = 0
             tore = 0
             toreN = 0
             for item in self.arr:
+                # prufList.append(int(item[1]))
                 if int(item[1]) == x:
                     if int(item[2])>int(item[3]):
                         score += 3
