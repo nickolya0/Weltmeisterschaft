@@ -1,3 +1,5 @@
+from cProfile import label
+from cgitb import text
 from tkinter import *
 import tkinter
 from tkinter.ttk import Combobox, Notebook
@@ -69,10 +71,13 @@ class Window:
     
     def draw_widgets(self):
         self.draw_menu()
-        Button(self.root, width=6, text="+ TAG", command=self.tab_obj_creator).pack()
-        Button(self.root, width=6, text="+", command=self.field_obj_creator).pack()
+        label_1 = Label(root, text="                                   ", font="Arial 14")
+
+        label_1.pack()
+        Button(label_1, width=6, text="+ TAG", command=self.tab_obj_creator).grid(row=2, column=0)
+        Button(label_1, width=6, text="+", command=self.field_obj_creator).grid(row=2, column=1)
         # Button(self.root, width=6, text="Rechnen", command=self.tab_data_berechnen).pack()
-        Button(self.root, width=6, text="Tabelle", command=self.obj_tabelle).pack()
+        Button(label_1, width=6, text="Tabelle", command=self.obj_tabelle).grid(row=2, column=2)
         
     def obj_tabelle(self):        
         obj_tabelle = tabelle.Tabelle(root, self.manschaftList_Sort, self.load_fields_index)

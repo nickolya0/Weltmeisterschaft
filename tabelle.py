@@ -55,16 +55,18 @@ class Tabelle:
         
 
         tv = ttk.Treeview(self.root)
-        tv['columns']=('Manschaft', 'Score', 'Tore')
+        tv['columns']=('Manschaft', 'Score', 'Tore', 'Spiele')
         tv.column('#0', width=0, stretch=NO)
         tv.column('Manschaft', anchor=CENTER, width=80)
         tv.column('Score', anchor=CENTER, width=80)
         tv.column('Tore', anchor=CENTER, width=80)
+        tv.column('Spiele', anchor=CENTER, width=80)
 
         tv.heading('#0', text='', anchor=CENTER)
         tv.heading('Manschaft', text='Manschaft', anchor=CENTER)
         tv.heading('Score', text='Score', anchor=CENTER)
         tv.heading('Tore', text='Tore', anchor=CENTER)
+        tv.heading('Spiele', text='Spiele', anchor=CENTER)
 
         self.scoreList
         self.spieleList
@@ -76,7 +78,7 @@ class Tabelle:
             print()
             print('1111111111111111111111111111111111')
             print(self.manschaftList_Sort[int(i.split(' ')[0])])
-            tv.insert(parent='', index=nummer, iid=nummer, text='', values=(self.manschaftList_Sort[int(i.split(' ')[0])], self.scoreList[nummer].split(' ')[1], self.toreZusamenVerbinden[nummer].split(' ')[1]))
+            tv.insert(parent='', index=nummer, iid=nummer, text='', values=(self.manschaftList_Sort[int(i.split(' ')[0])], self.scoreList[nummer].split(' ')[1], self.toreZusamenVerbinden[nummer].split(' ')[1], self.spieleList[nummer].split(' ')[1]))
             nummer += 1
         tv.pack()
 
